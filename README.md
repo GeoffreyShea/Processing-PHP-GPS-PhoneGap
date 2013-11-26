@@ -12,3 +12,5 @@ database table with fields: user, long, lat, id and time.
 
 A whitelist setting needs to be made to one of your config.xml files in your PhoneGap / Xcode project
 to be able to connect to jQuery remotely.
+
+This will be integrated to an Xbee Arduino Audio network: https://github.com/GeoffreyShea/Xbee-Arduino-Audio
