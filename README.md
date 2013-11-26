@@ -10,5 +10,5 @@ Assumes you've got a local web server with PHP and MySQL. (Setting in your Apach
 need to be adjusted to connect to clients other than 'localhost'.) I've configured a local
 database table with fields: user, long, lat, id and time.
 
-A whitelist setting needs to be made to one of your config.xml files in your PhoneGap / Xcode to be
-able to connect to jQuery remotely.
+A whitelist setting needs to be made to one of your config.xml files in your PhoneGap / Xcode project
+to be able to connect to jQuery remotely.
