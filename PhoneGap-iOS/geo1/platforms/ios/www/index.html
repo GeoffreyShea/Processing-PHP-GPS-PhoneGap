@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Device Properties Example</title>
+        
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            
+            var user = Math.floor(Math.random()* (999 - 100 +1) + 100);
+            var lat = 0;
+            var long = 0;
+            
+            navigator.geolocation.getAccurateCurrentPosition = function (geolocationSuccess, geolocationError, geoprogress, options) {
+                var lastCheckedPosition,
+                locationEventCount = 0,
+                watchID,
+                timerID;
+                
+                options = options || {};
+                
+                var checkLocation = function (position) {
+                    lastCheckedPosition = position;
+                    locationEventCount = locationEventCount + 1;
+                    // We ignore the first event unless it's the only one received because some devices seem to send a cached
+                    // location even when maxaimumAge is set to zero
+                    if ((position.coords.accuracy <= options.desiredAccuracy) && (locationEventCount > 1)) {
+                        clearTimeout(timerID);
+                        navigator.geolocation.clearWatch(watchID);
+                        foundPosition(position);
+                    } else {
+                        geoprogress(position);
+                    }
+                };
+                
+                var stopTrying = function () {
+                    navigator.geolocation.clearWatch(watchID);
+                    foundPosition(lastCheckedPosition);
+                };
+                
+                var onError = function (error) {
+                    clearTimeout(timerID);
+                    navigator.geolocation.clearWatch(watchID);
+                    geolocationError(error);
+                };
+                
+                var foundPosition = function (position) {
+                    geolocationSuccess(position);
+                };
+                
+                if (!options.maxWait)            options.maxWait = 10000; // Default 10 seconds
+                if (!options.desiredAccuracy)    options.desiredAccuracy = 20; // Default 20 meters
+                if (!options.timeout)            options.timeout = options.maxWait; // Default to maxWait
+                
+                options.maximumAge = 0; // Force current locations only
+                options.enableHighAccuracy = true; // Force high accuracy (otherwise, why are you using this function?)
+                
+                watchID = navigator.geolocation.watchPosition(checkLocation, onError, options);
+                timerID = setTimeout(stopTrying, options.maxWait); // Set a timeout that will abandon the location loop
+            };
+            
+            
+            // Wait for device API libraries to load
+            //
+            document.addEventListener("deviceready", onDeviceReady, false);
+            
+            // device APIs are available
+            //
+            function onDeviceReady() {
+                 navigator.geolocation.getCurrentPosition(onSuccess, onError);
+                // navigator.geolocation.getAccurateCurrentPosition(onSuccess, onError, onProgress, {desiredAccuracy:20, maxWait:15000});
+            }
+            
+            // onSuccess Geolocation
+            //
+            function onSuccess(position) {
+                //alert('test');
+                // maximumAge: 3000, timeout: 10000, enableHighAccuracy: true
+                var element = document.getElementById('geolocation');
+                long = Math.round( position.coords.longitude * 10000 ) / 10000;
+                lat = Math.round( position.coords.latitude * 10000 ) / 10000;
+                element.innerHTML = 'Latitude: '          + lat         + '<br />' +
+                'Longitude: '         + long        + '<br />' +
+                'Altitude: '          + position.coords.altitude         + '<br />' +
+                'Accuracy: '          + position.coords.accuracy         + '<br />' +
+                'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '<br />' +
+                'Heading: '           + position.coords.heading          + '<br />' +
+                'Speed: '             + position.coords.speed            + '<br />' +
+                'Timestamp: '         + position.timestamp               + '<br />' +
+                'User: '              + user;
+                
+            }
+            
+            setInterval(postData, 10000);
+            
+            function postData(){
+                jQuery.ajax({
+                    type: "POST",
+                    url:  "http://192.168.0.13/geo/location.php",
+                    //data: u=45&long=54.56&lat=65,
+                    data: 'lat='+lat+'&long='+long+'&u='+user,
+                    //cache: false,
+                            error: function(){
+                            //alert("error");
+                            }
+                });
+                //alert('test : long = ' + long);
+            }
+            
+            // onError Callback receives a PositionError object
+            //
+            function onError(error) {
+                alert('code: '    + error.code    + '\n' +
+                      'message: ' + error.message + '\n');
+            }
+            
+            
+            </script>
+    </head>
+    <body>
+        <p id="geolocation">Finding geolocation...</p>
+    </body>
+</html>
