@@ -7,7 +7,8 @@ a web service running on the controller computer running Processing and issues a
 static, public IP address.)
 
 Assumes you've got a local web server with PHP and MySQL. (Setting in your Apache config file may
-need to be adjusted to connect to clients other than 'localhost'.)
+need to be adjusted to connect to clients other than 'localhost'.) I've configured a local
+database table with fields: user, long, lat, id and time.
 
 A whitelist setting needs to be made to one of your config.xml files in your PhoneGap / Xcode to be
 able to connect to jQuery remotely.
