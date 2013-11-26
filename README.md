@@ -11,6 +11,6 @@ need to be adjusted to connect to clients other than 'localhost'.) I've configur
 database table with fields: user, long, lat, id and time.
 
 A whitelist setting needs to be made to one of your config.xml files in your PhoneGap / Xcode project
-to be able to connect to jQuery remotely.
+to be able to connect to jQuery remotely. Otherwise, this is the only file you have to edit: https://github.com/GeoffreyShea/Processing-PHP-GPS-PhoneGap/blob/master/PhoneGap-iOS/geo1/platforms/ios/www/index.html
 
 This will be integrated to an Xbee Arduino Audio network: https://github.com/GeoffreyShea/Xbee-Arduino-Audio
